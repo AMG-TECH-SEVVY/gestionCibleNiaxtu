@@ -1,4 +1,8 @@
 package com.Niaxtu.gestionCible.repository;
 
-public interface CiblePriveRepository {
+import com.Niaxtu.gestionCible.entities.CiblePrivee;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CiblePriveRepository extends JpaRepository<CiblePrivee,Long> {
+
 }

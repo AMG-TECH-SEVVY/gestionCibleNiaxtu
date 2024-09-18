@@ -15,7 +15,6 @@ public class CiblePrivee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CIBLE_ID", nullable = false)
     private Long id;
-
     @Size(max = 255)
     @NotNull
     @Column(name = "CIBLE_NOM", nullable = false)
