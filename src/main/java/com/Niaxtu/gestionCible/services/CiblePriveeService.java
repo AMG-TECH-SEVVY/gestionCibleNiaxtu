@@ -1,4 +1,4 @@
 package com.Niaxtu.gestionCible.services;
 
-public class CibleService {
+public class CiblePriveeService {
 }
