@@ -1,12 +1,16 @@
 package com.Niaxtu.gestionCible.web;
 
+import com.Niaxtu.gestionCible.Exceptions.CiblePriveeNotFoundException;
+import com.Niaxtu.gestionCible.entities.CiblePrivee;
 import com.Niaxtu.gestionCible.entities.Structure;
 import com.Niaxtu.gestionCible.entities.SousSecteur;
 import com.Niaxtu.gestionCible.entities.Secteur;
 import com.Niaxtu.gestionCible.services.StructureService;
 import com.Niaxtu.gestionCible.services.SousSecteurService;
 import com.Niaxtu.gestionCible.services.SecteurService;
+import com.Niaxtu.gestionCible.services.CiblePriveeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +24,13 @@ public class GestionCibleController {
     private final StructureService structureService;
     private final SousSecteurService sousSecteurService;
     private final SecteurService secteurService;
-
+    private final CiblePriveeService ciblePriveeService;
     @Autowired
-    public GestionCibleController(StructureService structureService, SousSecteurService sousSecteurService, SecteurService secteurService) {
+    public GestionCibleController( StructureService structureService, SousSecteurService sousSecteurService, SecteurService secteurService, CiblePriveeService ciblePriveeService){
         this.structureService = structureService;
-        this.sousSecteurService = sousSecteurService;
-        this.secteurService = secteurService;
+        this.secteurService= secteurService;
+        this.sousSecteurService=sousSecteurService;
+        this.ciblePriveeService=ciblePriveeService;
     }
 
     // ********** Endpoints pour Structure **********
@@ -115,6 +120,43 @@ public class GestionCibleController {
     @DeleteMapping("/secteurs/{id}")
     public ResponseEntity<Void> deleteSecteur(@PathVariable Long id) {
         secteurService.deleteSecteur(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ************ Endpoint pour obtenir toutes les cibles privées ****************
+    @GetMapping(path = "/cibleprivees")
+    public List<CiblePrivee> getAllCiblePrivees() {
+        return ciblePriveeService.getAllCiblePrivees();
+    }
+
+    // ************ Endpoint pour obtenir une cible privée par ID ****************
+    @GetMapping("cible/{id}")
+    public ResponseEntity<CiblePrivee> getCiblePriveeById(@PathVariable long id) {
+        CiblePrivee ciblePrivee = ciblePriveeService.getCiblePriveeById(id)
+                .orElseThrow(() -> new CiblePriveeNotFoundException(id));
+        return ResponseEntity.ok(ciblePrivee);
+    }
+
+    // ************ Endpoint pour créer une nouvelle cible privée ****************
+    @PostMapping(path = "/nouvellecible")
+    public ResponseEntity<CiblePrivee> createCiblePrivee(@RequestBody CiblePrivee ciblePrivee) {
+        CiblePrivee newCible = ciblePriveeService.createCiblePrivee(ciblePrivee);
+        return new ResponseEntity<>(newCible, HttpStatus.CREATED);
+    }
+
+    // ************ Endpoint pour mettre à jour une cible privée ****************
+    @PutMapping(path = "upadte/{id}")
+    public ResponseEntity<CiblePrivee> updateCiblePrivee(
+            @PathVariable long id,
+            @RequestBody CiblePrivee cibleDetails) {
+        CiblePrivee updatedCible = ciblePriveeService.updateCiblePrivee(id, cibleDetails);
+        return ResponseEntity.ok(updatedCible);
+    }
+
+    // ************ Endpoint pour supprimer une cible privée ****************
+    @DeleteMapping(path = "supprimercible/{id}")
+    public ResponseEntity<Void> deleteCiblePrivee(@PathVariable long id) {
+        ciblePriveeService.deleteCiblePrivee(id);
         return ResponseEntity.noContent().build();
     }
 }

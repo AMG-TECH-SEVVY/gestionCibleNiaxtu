@@ -3,12 +3,13 @@ package com.Niaxtu.gestionCible.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 
 @Getter
-@Setter
-@Entity
+@Data
 @Table(name = "cible_privee")
 public class CiblePrivee {
     @Id
